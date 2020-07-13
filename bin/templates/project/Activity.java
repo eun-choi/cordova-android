@@ -38,4 +38,11 @@ public class __ACTIVITY__ extends CordovaActivity
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        this.appView.loadUrl("javascript:if (document.webkitExitFullscreen) {document.webkitExitFullscreen();}");
+        return;
+    }
 }
