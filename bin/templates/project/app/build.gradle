@@ -249,7 +249,8 @@ android {
     }
 
     lintOptions {
-      abortOnError false;
+        abortOnError false;
+        checkReleaseBuilds false
     }
 
     compileSdkVersion cdvCompileSdkVersion
@@ -369,9 +370,9 @@ def promptForReleaseKeyPassword() {
 
 gradle.taskGraph.whenReady { taskGraph ->
     taskGraph.getAllTasks().each() { task ->
-      if(['validateReleaseSigning', 'validateSigningRelease', 'validateSigningArmv7Release', 'validateSigningX76Release'].contains(task.name)) {
-         promptForReleaseKeyPassword()
-      }
+        if(['validateReleaseSigning', 'validateSigningRelease', 'validateSigningArmv7Release', 'validateSigningX76Release'].contains(task.name)) {
+            promptForReleaseKeyPassword()
+        }
     }
 }
 
