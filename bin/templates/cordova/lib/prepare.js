@@ -20,7 +20,6 @@
 var fs = require('fs-extra');
 var path = require('path');
 const nopt = require('nopt');
-const glob = require('fast-glob');
 var events = require('cordova-common').events;
 var AndroidManifest = require('./AndroidManifest');
 var checkReqs = require('./check_reqs');
@@ -238,9 +237,9 @@ function updateProjectAccordingTo (platformConfig, locations) {
 
     // Java file paths shouldn't be hard coded
     const javaDirectory = path.join(locations.javaSrc, manifestId.replace(/\./g, '/'));
-    const java_files = glob.sync('**/*.java', { cwd: javaDirectory, absolute: true }).filter(f => {
-        const contents = fs.readFileSync(f, 'utf-8');
-        return /extends\s+CordovaActivity/.test(contents);
+    const javaPattern = /\.java$/;
+    const java_files = utils.scanDirectory(javaDirectory, javaPattern, true).filter(function (f) {
+        return utils.grep(f, /extends\s+CordovaActivity/g) !== null;
     });
 
     if (java_files.length === 0) {
@@ -665,8 +664,9 @@ function cleanIcons (projectRoot, projectConfig, platformResourcesDir) {
  */
 function mapImageResources (rootDir, subDir, type, resourceName) {
     const pathMap = {};
-    glob.sync(type + '-*', { cwd: path.join(rootDir, subDir) }).forEach(drawableFolder => {
-        const imagePath = path.join(subDir, drawableFolder, resourceName);
+    const pattern = new RegExp(type + '+-.+');
+    utils.scanDirectory(path.join(rootDir, subDir), pattern).forEach(function (drawableFolder) {
+        const imagePath = path.join(subDir, path.basename(drawableFolder), resourceName);
         pathMap[imagePath] = null;
     });
     return pathMap;
