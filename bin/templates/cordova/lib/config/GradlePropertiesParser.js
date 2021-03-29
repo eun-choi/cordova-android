@@ -34,11 +34,11 @@ class GradlePropertiesParser {
             'org.gradle.daemon': 'true',
 
             // to allow dex in process
-            'org.gradle.jvmargs': '-Xmx2048m',
+            'org.gradle.jvmargs': '-Xmx4096m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8',
 
             // Android X
-            'android.useAndroidX': 'false',
-            'android.enableJetifier': 'false'
+            // 'android.useAndroidX': 'false',
+            // 'android.enableJetifier': 'false'
 
             // Shaves another 100ms, but produces a "try at own risk" warning. Not worth it (yet):
             // 'org.gradle.parallel': 'true'

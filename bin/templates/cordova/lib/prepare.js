@@ -20,7 +20,6 @@
 var fs = require('fs-extra');
 var path = require('path');
 const nopt = require('nopt');
-const glob = require('fast-glob');
 var events = require('cordova-common').events;
 var AndroidManifest = require('./AndroidManifest');
 var checkReqs = require('./check_reqs');
@@ -238,9 +237,9 @@ function updateProjectAccordingTo (platformConfig, locations) {
 
     // Java file paths shouldn't be hard coded
     const javaDirectory = path.join(locations.javaSrc, manifestId.replace(/\./g, '/'));
-    const java_files = glob.sync('**/*.java', { cwd: javaDirectory, absolute: true }).filter(f => {
-        const contents = fs.readFileSync(f, 'utf-8');
-        return /extends\s+CordovaActivity/.test(contents);
+    const javaPattern = /\.java$/;
+    const java_files = utils.scanDirectory(javaDirectory, javaPattern, true).filter(function (f) {
+        return utils.grep(f, /extends\s+CordovaActivity/g) !== null;
     });
 
     if (java_files.length === 0) {
@@ -302,12 +301,11 @@ function default_versionCode (version) {
 }
 
 function getImageResourcePath (resourcesDir, type, density, name, sourceName) {
-    // Use same extension as source with special case for 9-Patch files
-    const ext = sourceName.endsWith('.9.png')
-        ? '.9.png' : path.extname(sourceName).toLowerCase();
-
-    const subDir = density ? `${type}-${density}` : type;
-    return path.join(resourcesDir, subDir, name + ext);
+    if (/\.9\.png$/.test(sourceName)) {
+        name = name.replace(/\.png$/, '.9.png');
+    }
+    var resourcePath = path.join(resourcesDir, (density ? type + '-' + density : type), name);
+    return resourcePath;
 }
 
 function getAdaptiveImageResourcePath (resourcesDir, type, density, name, sourceName) {
@@ -316,15 +314,6 @@ function getAdaptiveImageResourcePath (resourcesDir, type, density, name, source
     }
     var resourcePath = path.join(resourcesDir, (density ? type + '-' + density + '-v26' : type), name);
     return resourcePath;
-}
-
-function makeSplashCleanupMap (projectRoot, resourcesDir) {
-    // Build an initial resource map that deletes all existing splash screens
-    const existingSplashPaths = glob.sync(
-        `${resourcesDir.replace(/\\/g, '/')}/drawable-*/screen.{png,9.png,webp,jpg,jpeg}`,
-        { cwd: projectRoot }
-    );
-    return makeCleanResourceMap(existingSplashPaths);
 }
 
 function updateSplashes (cordovaProject, platformResourcesDir) {
@@ -336,8 +325,7 @@ function updateSplashes (cordovaProject, platformResourcesDir) {
         return;
     }
 
-    // Build an initial resource map that deletes all existing splash screens
-    const resourceMap = makeSplashCleanupMap(cordovaProject.root, platformResourcesDir);
+    var resourceMap = mapImageResources(cordovaProject.root, platformResourcesDir, 'drawable', 'screen.png');
 
     var hadMdpi = false;
     resources.forEach(function (resource) {
@@ -348,14 +336,14 @@ function updateSplashes (cordovaProject, platformResourcesDir) {
             hadMdpi = true;
         }
         var targetPath = getImageResourcePath(
-            platformResourcesDir, 'drawable', resource.density, 'screen', path.basename(resource.src));
+            platformResourcesDir, 'drawable', resource.density, 'screen.png', path.basename(resource.src));
         resourceMap[targetPath] = resource.src;
     });
 
     // There's no "default" drawable, so assume default == mdpi.
     if (!hadMdpi && resources.defaultResource) {
         var targetPath = getImageResourcePath(
-            platformResourcesDir, 'drawable', 'mdpi', 'screen', path.basename(resources.defaultResource.src));
+            platformResourcesDir, 'drawable', 'mdpi', 'screen.png', path.basename(resources.defaultResource.src));
         resourceMap[targetPath] = resources.defaultResource.src;
     }
 
@@ -367,8 +355,7 @@ function updateSplashes (cordovaProject, platformResourcesDir) {
 function cleanSplashes (projectRoot, projectConfig, platformResourcesDir) {
     var resources = projectConfig.getSplashScreens('android');
     if (resources.length > 0) {
-        const resourceMap = makeSplashCleanupMap(projectRoot, platformResourcesDir);
-
+        var resourceMap = mapImageResources(projectRoot, platformResourcesDir, 'drawable', 'screen.png');
         events.emit('verbose', 'Cleaning splash screens at ' + platformResourcesDir);
 
         // No source paths are specified in the map, so updatePaths() will delete the target files.
@@ -558,13 +545,13 @@ function updateIconResourceForLegacy (preparedIcons, resourceMap, platformResour
     // The source paths for icons and splashes are relative to
     // project's config.xml location, so we use it as base path.
     for (var density in android_icons) {
-        var targetPath = getImageResourcePath(platformResourcesDir, 'mipmap', density, 'ic_launcher', path.basename(android_icons[density].src));
+        var targetPath = getImageResourcePath(platformResourcesDir, 'mipmap', density, 'ic_launcher.png', path.basename(android_icons[density].src));
         resourceMap[targetPath] = android_icons[density].src;
     }
 
     // There's no "default" drawable, so assume default == mdpi.
     if (default_icon && !android_icons.mdpi) {
-        var defaultTargetPath = getImageResourcePath(platformResourcesDir, 'mipmap', 'mdpi', 'ic_launcher', path.basename(default_icon.src));
+        var defaultTargetPath = getImageResourcePath(platformResourcesDir, 'mipmap', 'mdpi', 'ic_launcher.png', path.basename(default_icon.src));
         resourceMap[defaultTargetPath] = default_icon.src;
     }
 
@@ -677,21 +664,11 @@ function cleanIcons (projectRoot, projectConfig, platformResourcesDir) {
  */
 function mapImageResources (rootDir, subDir, type, resourceName) {
     const pathMap = {};
-    const globOptions = { cwd: path.join(rootDir, subDir), onlyDirectories: true };
-    glob.sync(type + '-*', globOptions).forEach(drawableFolder => {
-        const imagePath = path.join(subDir, drawableFolder, resourceName);
+    const pattern = new RegExp(type + '+-.+');
+    utils.scanDirectory(path.join(rootDir, subDir), pattern).forEach(function (drawableFolder) {
+        const imagePath = path.join(subDir, path.basename(drawableFolder), resourceName);
         pathMap[imagePath] = null;
     });
-    return pathMap;
-}
-
-/** Returns resource map that deletes all given paths */
-function makeCleanResourceMap (resourcePaths) {
-    const pathMap = {};
-    resourcePaths.map(path.normalize)
-        .forEach(resourcePath => {
-            pathMap[resourcePath] = null;
-        });
     return pathMap;
 }
 

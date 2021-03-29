@@ -20,7 +20,6 @@
 var path = require('path');
 var emulator = require('./emulator');
 var device = require('./device');
-const target = require('./target');
 var PackageType = require('./PackageType');
 const { CordovaError, events } = require('cordova-common');
 
@@ -111,12 +110,14 @@ module.exports.run = function (runOptions) {
             }
 
             resolve(self._builder.fetchBuildResults(buildOptions.buildType, buildOptions.arch));
-        }).then(async function (buildResults) {
+        }).then(function (buildResults) {
             if (resolvedTarget && resolvedTarget.isEmulator) {
-                await emulator.wait_for_boot(resolvedTarget.id);
+                return emulator.wait_for_boot(resolvedTarget.target).then(function () {
+                    return emulator.install(resolvedTarget, buildResults);
+                });
             }
 
-            return target.install(resolvedTarget, buildResults);
+            return device.install(resolvedTarget, buildResults);
         });
     });
 };

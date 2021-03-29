@@ -44,20 +44,23 @@ buildscript {
         ext.kotlin_version = gradlePluginKotlinVersion
     }
 
-    apply from: 'repositories.gradle'
-    repositories repos
+    repositories {
+        mavenCentral()
+        google()
+        jcenter()
+    }
 
     dependencies {
         apply from: '../CordovaLib/cordova.gradle'
 
-        classpath 'com.android.tools.build:gradle:4.1.3'
+        classpath 'com.android.tools.build:gradle:4.1.2'
 
         if (cdvHelpers.getConfigPreference('GradlePluginKotlinEnabled', 'false').toBoolean()) {
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         }
 
         if(cdvHelpers.getConfigPreference('GradlePluginGoogleServicesEnabled', 'false').toBoolean()) {
-            String defaultGradlePluginGoogleServicesVersion = '4.2.0'
+            String defaultGradlePluginGoogleServicesVersion = '4.3.5'
 
             /**
              * Fetches the user's defined Google Services Plugin Version from config.xml.
@@ -79,12 +82,14 @@ buildscript {
 
 // Allow plugins to declare Maven dependencies via build-extras.gradle.
 allprojects {
-    apply from: 'repositories.gradle'
-    repositories repos
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '6.8.3'
+    gradleVersion = '6.8.2'
 }
 
 // Configuration properties. Set these via environment variables, build-extras.gradle, or gradle.properties.
@@ -244,7 +249,8 @@ android {
     }
 
     lintOptions {
-      abortOnError false;
+        abortOnError false;
+        checkReleaseBuilds false
     }
 
     compileSdkVersion cdvCompileSdkVersion
@@ -364,9 +370,9 @@ def promptForReleaseKeyPassword() {
 
 gradle.taskGraph.whenReady { taskGraph ->
     taskGraph.getAllTasks().each() { task ->
-      if(['validateReleaseSigning', 'validateSigningRelease', 'validateSigningArmv7Release', 'validateSigningX76Release'].contains(task.name)) {
-         promptForReleaseKeyPassword()
-      }
+        if(['validateReleaseSigning', 'validateSigningRelease', 'validateSigningArmv7Release', 'validateSigningX76Release'].contains(task.name)) {
+            promptForReleaseKeyPassword()
+        }
     }
 }
 

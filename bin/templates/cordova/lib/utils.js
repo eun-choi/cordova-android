@@ -24,8 +24,7 @@
 // TODO: Perhaps this should live in cordova-common?
 
 const fs = require('fs-extra');
-const which = require('which');
-const os = require('os');
+const path = require('path');
 
 /**
  * Reads, searches, and replaces the found occurences with replacementString and then writes the file back out.
@@ -42,27 +41,57 @@ exports.replaceFileContents = function (file, searchRegex, replacementString) {
     fs.writeFileSync(file, contents);
 };
 
-// Some helpers for easier sorting
-exports.compare = (a, b) => (a < b && -1) || +(a > b);
-exports.compareBy = f => (a, b) => exports.compare(f(a), f(b));
-exports.compareByAll = fns => {
-    const comparators = fns.map(exports.compareBy);
-    return (a, b) => {
-        for (const cmp of comparators) {
-            const result = cmp(a, b);
-            if (result) return result;
+/**
+ * Reads a file and scans for regex. Returns the line of the first occurence or null if no occurences are found.
+ *
+ * @param {string} file A file path
+ * @param {RegExp} regex A search regex
+ * @returns string|null
+ */
+exports.grep = function (file, regex) {
+    const contents = fs.readFileSync(file).toString().replace(/\\r/g, '').split('\n');
+    for (let i = 0; i < contents.length; i++) {
+        const line = contents[i];
+        if (regex.test(line)) {
+            return line;
         }
-        return 0;
-    };
+    }
+    return null;
 };
 
-exports.forgivingWhichSync = (cmd) => {
-    const whichResult = which.sync(cmd, { nothrow: true });
+/**
+ * Scans directories and outputs a list of found paths that matches the regex
+ *
+ * @param {string} directory The starting directory
+ * @param {RegExp} regex The search regex
+ * @param {boolean} recursive Enables recursion
+ * @returns Array<string>
+ */
+exports.scanDirectory = function (directory, regex, recursive) {
+    let output = [];
 
-    // On null, returns empty string to maintain backwards compatibility
-    // realpathSync follows symlinks
-    return whichResult === null ? '' : fs.realpathSync(whichResult);
+    if (fs.existsSync(directory)) {
+        const items = fs.readdirSync(directory);
+
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            const itemPath = path.join(directory, item);
+            const stats = fs.statSync(itemPath);
+
+            if (regex.test(itemPath)) {
+                output.push(itemPath);
+            }
+
+            if (stats.isDirectory()) {
+                if (recursive) {
+                    output = output.concat(exports.scanDirectory(itemPath, regex, recursive));
+                } else {
+                    // Move onto the next item
+                    continue;
+                }
+            }
+        }
+    }
+
+    return output;
 };
-
-exports.isWindows = () => os.platform() === 'win32';
-exports.isDarwin = () => os.platform() === 'darwin';
