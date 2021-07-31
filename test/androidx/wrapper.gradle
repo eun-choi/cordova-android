@@ -18,5 +18,5 @@
 
 wrapper {
   apply from: '../../framework/cordova.gradle'
-  gradleVersion = cordovaConfig.GRADLE_VERSION
+  gradleVersion = 6.9
 }

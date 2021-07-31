@@ -29,7 +29,7 @@ buildscript {
 
     // Checks if the kotlin version format is valid.
     if(cordovaConfig.IS_GRADLE_PLUGIN_KOTLIN_ENABLED) {
-        if(!cdvHelpers.isVersionValid(cordovaConfig.KOTLIN_VERSION)) {
+        if(!cdvHelpers.isVersionValid('1.5.21')) {
             throw new GradleException("The defined Kotlin version (${cordovaConfig.KOTLIN_VERSION}) does not appear to be a valid version.")
         }
     }
@@ -38,20 +38,20 @@ buildscript {
     repositories repos
 
     dependencies {
-        classpath "com.android.tools.build:gradle:${cordovaConfig.AGP_VERSION}"
+        classpath "com.android.tools.build:gradle:4.2.2"
 
         if (cordovaConfig.IS_GRADLE_PLUGIN_KOTLIN_ENABLED) {
-            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${cordovaConfig.KOTLIN_VERSION}"
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21"
         }
 
         if(cordovaConfig.IS_GRADLE_PLUGIN_GOOGLE_SERVICES_ENABLED) {
             // Checks if the kotlin version format is valid.
-            if(!cdvHelpers.isVersionValid(cordovaConfig.GRADLE_PLUGIN_GOOGLE_SERVICES_VERSION)) {
+            if(!cdvHelpers.isVersionValid('4.3.8') {
                 throw new GradleException("The defined Google Services plugin version (${cordovaConfig.GRADLE_PLUGIN_GOOGLE_SERVICES_VERSION}) does not appear to be a valid version.")
             }
 
             // Create the Google Services classpath and set it.
-            String gradlePluginGoogleServicesClassPath = "com.google.gms:google-services:${cordovaConfig.GRADLE_PLUGIN_GOOGLE_SERVICES_VERSION}"
+            String gradlePluginGoogleServicesClassPath = "com.google.gms:google-services:4.3.8"
             println "Adding classpath: ${gradlePluginGoogleServicesClassPath}"
             classpath gradlePluginGoogleServicesClassPath
         }
@@ -65,7 +65,7 @@ allprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = cordovaConfig.GRADLE_VERSION
+    gradleVersion = 6.9
 }
 
 // Configuration properties. Set these via environment variables, build-extras.gradle, or gradle.properties.
@@ -177,12 +177,12 @@ android {
         versionCode cdvVersionCode ?: new BigInteger("" + privateHelpers.extractIntFromManifest("versionCode"))
         applicationId privateHelpers.extractStringFromManifest("package")
 
-        minSdkVersion cordovaConfig.MIN_SDK_VERSION
+        minSdkVersion 22
         if (cordovaConfig.MAX_SDK_VERSION != null) {
             maxSdkVersion cordovaConfig.MAX_SDK_VERSION
         }
-        targetSdkVersion cordovaConfig.SDK_VERSION
-        compileSdkVersion cordovaConfig.SDK_VERSION
+        targetSdkVersion 29
+        compileSdkVersion 29
     }
 
     lintOptions {
@@ -280,10 +280,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
-    implementation "androidx.appcompat:appcompat:${cordovaConfig.ANDROIDX_APP_COMPAT_VERSION}"
+    implementation "androidx.appcompat:appcompat:1.3.0"
 
     if (cordovaConfig.IS_GRADLE_PLUGIN_KOTLIN_ENABLED) {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${cordovaConfig.KOTLIN_VERSION}"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.21"
     }
 
     // SUB-PROJECT DEPENDENCIES START
