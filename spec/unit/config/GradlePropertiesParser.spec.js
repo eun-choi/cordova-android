@@ -212,7 +212,7 @@ describe('Gradle Builder', () => {
         });
 
         describe('JVM recommended tests', () => {
-            const recommended = '-Xmx2048m';
+            const recommended = '-Xmx4096m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8';
 
             const tests = {
                 // kb
