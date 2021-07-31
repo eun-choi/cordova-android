@@ -87,7 +87,7 @@ describe('Gradle Builder', () => {
 
             parser = new GradlePropertiesParser('/root');
 
-            parser._defaults = { 'org.gradle.jvmargs': '-Xmx2048m' };
+            parser._defaults = { 'org.gradle.jvmargs': '-Xmx4096m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8' };
         });
 
         it('should detect missing default property and sets the property.', () => {
@@ -139,7 +139,7 @@ describe('Gradle Builder', () => {
 
         it('should detect default with changed value different from default and set.', () => {
             const setSpy = jasmine.createSpy('set');
-            const getSpy = jasmine.createSpy('get').and.returnValue('-Xmx2048m');
+            const getSpy = jasmine.createSpy('get').and.returnValue('-Xmx4096m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8');
 
             parser.gradleFile = {
                 set: setSpy,
