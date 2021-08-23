@@ -18,5 +18,5 @@
 
 wrapper {
   apply from: '../../framework/cordova.gradle'
-  gradleVersion = 6.9
+  gradleVersion = 6.9.1
 }
