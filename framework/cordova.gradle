@@ -159,7 +159,7 @@ def doApplyCordovaConfigCustomization() {
         cordovaConfig.MIN_SDK_VERSION = 22
     }
     if (project.hasProperty('cdvSdkVersion')) {
-        cordovaConfig.SDK_VERSION = 29
+        cordovaConfig.SDK_VERSION = 30
     }
     if (project.hasProperty('cdvMaxSdkVersion')) {
         cordovaConfig.MAX_SDK_VERSION = Integer.parseInt('' + cdvMaxSdkVersion)
