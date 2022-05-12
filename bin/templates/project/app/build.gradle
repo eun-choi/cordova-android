@@ -21,7 +21,7 @@ apply plugin: 'com.android.application'
 
 if (cdvHelpers.getConfigPreference('GradlePluginKotlinEnabled', 'false').toBoolean()) {
     apply plugin: 'kotlin-android'
-    apply plugin: 'kotlin-android-extensions'
+    // apply plugin: 'kotlin-android-extensions'
 }
 
 buildscript {
@@ -307,6 +307,12 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
+    }
+
+    if (cordovaConfig.IS_GRADLE_PLUGIN_KOTLIN_ENABLED) {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
     }
 
     if (cdvReleaseSigningPropertiesFile) {
