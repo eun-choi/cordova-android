@@ -187,8 +187,8 @@ android {
         if (cordovaConfig.MAX_SDK_VERSION != null) {
             maxSdkVersion cordovaConfig.MAX_SDK_VERSION
         }
-        targetSdkVersion 30
-        compileSdkVersion 30
+        targetSdkVersion 31
+        compileSdkVersion 31
     }
 
     lintOptions {
