@@ -51,7 +51,7 @@ buildscript {
             }
 
             // Create the Google Services classpath and set it.
-            String gradlePluginGoogleServicesClassPath = "com.google.gms:google-services:4.3.12"
+            String gradlePluginGoogleServicesClassPath = "com.google.gms:google-services:4.3.13"
             println "Adding classpath: ${gradlePluginGoogleServicesClassPath}"
             classpath gradlePluginGoogleServicesClassPath
         }
