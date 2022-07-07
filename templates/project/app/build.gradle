@@ -187,8 +187,8 @@ android {
         if (cordovaConfig.MAX_SDK_VERSION != null) {
             maxSdkVersion cordovaConfig.MAX_SDK_VERSION
         }
-        targetSdkVersion 32
-        compileSdkVersion 32
+        targetSdkVersion 31
+        compileSdkVersion 31
     }
 
     lintOptions {
@@ -251,9 +251,9 @@ android {
     }
 
     if (cordovaConfig.IS_GRADLE_PLUGIN_KOTLIN_ENABLED) {
-        kotlinOptions {
-            jvmTarget = "11"
-        }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
     }
 
     if (cdvReleaseSigningPropertiesFile) {
@@ -293,7 +293,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
     implementation "androidx.appcompat:appcompat:${cordovaConfig.ANDROIDX_APP_COMPAT_VERSION}"
-    implementation "androidx.core:core-splashscreen:${cordovaConfig.ANDROIDX_CORE_SPLASHSCREEN_VERSION}"
 
     if (cordovaConfig.IS_GRADLE_PLUGIN_KOTLIN_ENABLED) {
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${cordovaConfig.KOTLIN_VERSION}"
