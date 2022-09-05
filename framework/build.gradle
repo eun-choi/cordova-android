@@ -26,8 +26,6 @@ buildscript {
         // Android Gradle Plugin (AGP) Build Tools
         classpath "com.android.tools.build:gradle:7.2.2"
     }
-
-    cdvHelpers.verifyCordovaConfigForBuild()
 }
 
 allprojects {
@@ -80,7 +78,6 @@ android {
 dependencies {
     implementation "androidx.appcompat:appcompat:1.5.0"
     implementation "androidx.webkit:webkit:1.5.0"
-    implementation "androidx.core:core-splashscreen:1.0.0"
 }
 
 /**
