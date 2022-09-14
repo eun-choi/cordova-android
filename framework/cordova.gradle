@@ -168,7 +168,7 @@ def doApplyCordovaConfigCustomization() {
         cordovaConfig.BUILD_TOOLS_VERSION = "32.0.0"
     }
     if (project.hasProperty('cdvAndroidXAppCompatVersion')) {
-        cordovaConfig.ANDROIDX_APP_COMPAT_VERSION = "1.5.0"
+        cordovaConfig.ANDROIDX_APP_COMPAT_VERSION = "1.5.1"
     }
     if (project.hasProperty('cdvAndroidXWebKitVersion')) {
         cordovaConfig.ANDROIDX_WEBKIT_VERSION = "1.5.0"
