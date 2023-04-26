@@ -129,8 +129,13 @@ public class SplashScreenPlugin extends CordovaPlugin {
 
         // auto hide splash screen when custom delay is defined.
         if (autoHide && delayTime != DEFAULT_DELAY_TIME) {
-            Handler splashScreenDelayHandler = new Handler(cordova.getContext().getMainLooper());
-            splashScreenDelayHandler.postDelayed(() -> delayHandlerCondition ? keepOnScreen = false : null, delayTime);
+            Handler delayHandler = new Handler(cordova.getContext().getMainLooper());
+            delayHandler.postDelayed(
+                () -> { delayHandlerCondition ? keepOnScreen = false : null },
+                delayTime
+            );
+            /*Handler splashScreenDelayHandler = new Handler(cordova.getContext().getMainLooper());
+            splashScreenDelayHandler.postDelayed(() -> keepOnScreen = false, delayTime);*/
         }
 
         // auto hide splash screen with default delay (-1) delay is controlled by the
