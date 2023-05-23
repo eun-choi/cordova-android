@@ -183,7 +183,7 @@ android {
         versionCode cdvVersionCode ?: new BigInteger("" + privateHelpers.extractIntFromManifest("versionCode"))
         applicationId privateHelpers.extractStringFromManifest("package")
 
-        minSdkVersion 24
+        minSdkVersion 23
         if (cordovaConfig.MAX_SDK_VERSION != null) {
             maxSdkVersion cordovaConfig.MAX_SDK_VERSION
         }
