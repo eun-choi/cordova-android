@@ -24,9 +24,11 @@ android {
     compileSdkVersion 32
     buildToolsVersion "32.0.0"
 
+    namespace 'org.apache.cordova.unittests'
+
     defaultConfig {
         applicationId "org.apache.cordova.unittests"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 32
         versionCode 1
         versionName "1.0"
