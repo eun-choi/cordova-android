@@ -37,6 +37,28 @@ public class __ACTIVITY__ extends CordovaActivity
 
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
+        checkClonner();
+    }
+
+    int APP_PACKAGE_COUNT = 2;
+    private void checkClonner() {
+        String path = this.getFilesDir().getAbsolutePath();
+        int count = getDotCount(path);
+        if (count > APP_PACKAGE_COUNT) {
+            throw new RuntimeException("This app does not work in a cloning environment");
+        }
+    }
+    private int getDotCount(String path) {
+        int count = 0;
+        for (int i = 0; i < path.length(); i++) {
+            if (count > APP_PACKAGE_COUNT) {
+                break;
+            }
+            if (path.charAt(i) == '.') {
+                count++;
+            }
+        }
+        return count;
     }
 
     @Override
