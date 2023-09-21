@@ -77,10 +77,16 @@ android {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/NOTICE'
     }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
 }
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:1.5.1"
+    api "androidx.appcompat:appcompat:1.5.1"
     implementation "androidx.webkit:webkit:1.5.0"
     implementation "androidx.core:core-splashscreen:1.0.1"
 }
