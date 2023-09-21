@@ -189,8 +189,8 @@ android {
         if (cordovaConfig.MAX_SDK_VERSION != null) {
             maxSdkVersion cordovaConfig.MAX_SDK_VERSION
         }
-        targetSdkVersion 32
-        compileSdkVersion 32
+        targetSdkVersion 33
+        compileSdkVersion 33
     }
 
     lintOptions {
@@ -294,7 +294,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
-    implementation "androidx.appcompat:appcompat:1.5.1"
+    implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "androidx.core:core-splashscreen:1.0.1"
 
     if (cordovaConfig.IS_GRADLE_PLUGIN_KOTLIN_ENABLED) {
