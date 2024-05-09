@@ -160,7 +160,7 @@ def doApplyCordovaConfigCustomization() {
         cordovaConfig.MAX_SDK_VERSION = Integer.parseInt('' + cdvMaxSdkVersion)
     }
     if (project.hasProperty('cdvBuildToolsVersion')) {
-        cordovaConfig.BUILD_TOOLS_VERSION = "33.0.2"
+        cordovaConfig.BUILD_TOOLS_VERSION = "33.0.3"
     }
     if (project.hasProperty('cdvAndroidXAppCompatVersion')) {
         cordovaConfig.ANDROIDX_APP_COMPAT_VERSION = "1.5.1"
@@ -171,7 +171,7 @@ def doApplyCordovaConfigCustomization() {
 
     if (!cordovaConfig.BUILD_TOOLS_VERSION) {
         cordovaConfig.BUILD_TOOLS_VERSION = doFindLatestInstalledBuildTools(
-            "33.0.2"
+            "33.0.3"
         )
     }
 

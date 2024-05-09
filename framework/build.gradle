@@ -47,7 +47,7 @@ android {
     namespace 'org.apache.cordova'
 
     compileSdkVersion 33
-    buildToolsVersion "33.0.2"
+    buildToolsVersion "33.0.3"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

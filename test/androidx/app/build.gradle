@@ -22,7 +22,7 @@ apply from: '../../../framework/cordova.gradle'
 
 android {
     compileSdkVersion 33
-    buildToolsVersion "33.0.2"
+    buildToolsVersion "33.0.3"
 
     namespace 'org.apache.cordova.unittests'
 
