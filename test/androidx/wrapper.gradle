@@ -18,5 +18,5 @@
 
 wrapper {
   apply from: '../../framework/cordova.gradle'
-  gradleVersion = '8.7'
+  gradleVersion = '8.8'
 }
