@@ -12,5 +12,5 @@
     "GRADLE_PLUGIN_GOOGLE_SERVICES_VERSION": "4.4.1",
     "IS_GRADLE_PLUGIN_GOOGLE_SERVICES_ENABLED": true,
     "IS_GRADLE_PLUGIN_KOTLIN_ENABLED": true,
-    "PACKAGE_NAMESPACE": "net.dallala.twinkple"
+    "PACKAGE_NAMESPACE": "net.dallala.castmedev"
 }
