@@ -43,6 +43,10 @@ Boolean isVersionValid(version) {
     return !(new Version(version)).isEqual('0.0.0')
 }
 
+Boolean isVersionGreaterThanEqual(versionX, versionY) {
+    return (new Version(versionX)) >= (new Version(versionY))
+}
+
 String doFindLatestInstalledBuildTools(String minBuildToolsVersionString) {
     def buildToolsDirContents
     try {
@@ -163,10 +167,10 @@ def doApplyCordovaConfigCustomization() {
         cordovaConfig.BUILD_TOOLS_VERSION = "33.0.3"
     }
     if (project.hasProperty('cdvAndroidXAppCompatVersion')) {
-        cordovaConfig.ANDROIDX_APP_COMPAT_VERSION = "1.5.1"
+        cordovaConfig.ANDROIDX_APP_COMPAT_VERSION = "1.6.1"
     }
     if (project.hasProperty('cdvAndroidXWebKitVersion')) {
-        cordovaConfig.ANDROIDX_WEBKIT_VERSION = "1.5.0"
+        cordovaConfig.ANDROIDX_WEBKIT_VERSION = "1.7.0"
     }
 
     if (!cordovaConfig.BUILD_TOOLS_VERSION) {
