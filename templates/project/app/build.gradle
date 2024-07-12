@@ -38,7 +38,7 @@ buildscript {
     repositories repos
 
     dependencies {
-        classpath "com.android.tools.build:gradle:8.5.0"
+        classpath "com.android.tools.build:gradle:8.5.1"
 
         if (cordovaConfig.IS_GRADLE_PLUGIN_KOTLIN_ENABLED) {
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24"
@@ -71,7 +71,7 @@ allprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '8.8'
+    gradleVersion = '8.9'
 }
 
 // Configuration properties. Set these via environment variables, build-extras.gradle, or gradle.properties.
