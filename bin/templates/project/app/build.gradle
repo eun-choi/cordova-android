@@ -28,7 +28,7 @@ buildscript {
     apply from: '../CordovaLib/cordova.gradle'
 
     if(cdvHelpers.getConfigPreference('GradlePluginKotlinEnabled', 'false').toBoolean()) {
-        String defaultGradlePluginKotlinVersion = '1.9.24'
+        String defaultGradlePluginKotlinVersion = '1.9.25'
 
         /**
          * Fetches the user's defined Kotlin Version from config.xml.
@@ -56,7 +56,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:8.5.1'
 
         if (cdvHelpers.getConfigPreference('GradlePluginKotlinEnabled', 'false').toBoolean()) {
-            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24"
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.25"
         }
 
         if(cdvHelpers.getConfigPreference('GradlePluginGoogleServicesEnabled', 'false').toBoolean()) {
@@ -353,7 +353,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
 
     if (cdvHelpers.getConfigPreference('GradlePluginKotlinEnabled', 'false').toBoolean()) {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.24"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.25"
     }
 
     // SUB-PROJECT DEPENDENCIES START
