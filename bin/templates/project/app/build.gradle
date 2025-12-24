@@ -53,14 +53,14 @@ buildscript {
     dependencies {
         apply from: '../CordovaLib/cordova.gradle'
 
-        classpath 'com.android.tools.build:gradle:8.7.0'
+        classpath 'com.android.tools.build:gradle:8.13.2'
 
         if (cdvHelpers.getConfigPreference('GradlePluginKotlinEnabled', 'false').toBoolean()) {
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.25"
         }
 
         if(cdvHelpers.getConfigPreference('GradlePluginGoogleServicesEnabled', 'false').toBoolean()) {
-            String defaultGradlePluginGoogleServicesVersion = '4.4.2'
+            String defaultGradlePluginGoogleServicesVersion = '4.4.4'
 
             /**
              * Fetches the user's defined Google Services Plugin Version from config.xml.
@@ -89,7 +89,7 @@ allprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '8.10.2'
+    gradleVersion = '8.14.3'
 }
 
 // Configuration properties. Set these via environment variables, build-extras.gradle, or gradle.properties.
