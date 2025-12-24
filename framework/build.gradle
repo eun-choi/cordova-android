@@ -24,7 +24,7 @@ buildscript {
 
     dependencies {
         // Android Gradle Plugin (AGP) Build Tools
-        classpath "com.android.tools.build:gradle:8.7.0"
+        classpath "com.android.tools.build:gradle:${cordovaConfig.AGP_VERSION}"
     }
 
     cdvHelpers.verifyCordovaConfigForBuild()
@@ -46,17 +46,17 @@ apply plugin: 'com.android.library'
 android {
     namespace 'org.apache.cordova'
 
-    compileSdkVersion 34
-    buildToolsVersion "34.0.0"
+    compileSdkVersion cordovaConfig.COMPILE_SDK_VERSION
+    buildToolsVersion cordovaConfig.BUILD_TOOLS_VERSION
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaLanguageVersion.of(cordovaConfig.JAVA_SOURCE_COMPATIBILITY)
+        targetCompatibility JavaLanguageVersion.of(cordovaConfig.JAVA_TARGET_COMPATIBILITY)
     }
 
     // For the Android Cordova Lib, we allow changing the minSdkVersion, but it is at the users own risk
     defaultConfig {
-        minSdkVersion 24
+        minSdkVersion cordovaConfig.MIN_SDK_VERSION
     }
 
     sourceSets {
@@ -86,9 +86,9 @@ android {
 }
 
 dependencies {
-    api "androidx.appcompat:appcompat:1.7.0"
-    implementation "androidx.webkit:webkit:1.9.0"
-    implementation "androidx.core:core-splashscreen:1.0.1"
+    api "androidx.appcompat:appcompat:${cordovaConfig.ANDROIDX_APP_COMPAT_VERSION}"
+    implementation "androidx.webkit:webkit:${cordovaConfig.ANDROIDX_WEBKIT_VERSION}"
+    implementation "androidx.core:core-splashscreen:${cordovaConfig.ANDROIDX_CORE_SPLASHSCREEN_VERSION}"
 }
 
 /**

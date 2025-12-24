@@ -21,7 +21,11 @@ apply plugin: 'com.android.application'
 
 if (cordovaConfig.IS_GRADLE_PLUGIN_KOTLIN_ENABLED) {
     apply plugin: 'kotlin-android'
-    // apply plugin: 'kotlin-android-extensions'
+
+    if(!cdvHelpers.isVersionGreaterThanEqual(cordovaConfig.KOTLIN_VERSION, '1.8.0')) {
+        println "Kotlin version < 1.8.0 detected. Applying kotlin-android-extensions plugin."
+        apply plugin: 'kotlin-android-extensions'
+    }
 }
 
 buildscript {
@@ -38,10 +42,10 @@ buildscript {
     repositories repos
 
     dependencies {
-        classpath "com.android.tools.build:gradle:8.7.0"
+        classpath "com.android.tools.build:gradle:${cordovaConfig.AGP_VERSION}"
 
         if (cordovaConfig.IS_GRADLE_PLUGIN_KOTLIN_ENABLED) {
-            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.25"
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${cordovaConfig.KOTLIN_VERSION}"
         }
 
         if(cordovaConfig.IS_GRADLE_PLUGIN_GOOGLE_SERVICES_ENABLED) {
@@ -51,7 +55,7 @@ buildscript {
             }
 
             // Create the Google Services classpath and set it.
-            String gradlePluginGoogleServicesClassPath = "com.google.gms:google-services:4.4.2"
+            String gradlePluginGoogleServicesClassPath = "com.google.gms:google-services:${cordovaConfig.GRADLE_PLUGIN_GOOGLE_SERVICES_VERSION}"
             println "Adding classpath: ${gradlePluginGoogleServicesClassPath}"
             classpath gradlePluginGoogleServicesClassPath
         }
@@ -71,7 +75,7 @@ allprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '8.10.2'
+    gradleVersion = cordovaConfig.GRADLE_VERSION
 }
 
 // Configuration properties. Set these via environment variables, build-extras.gradle, or gradle.properties.
@@ -189,12 +193,12 @@ android {
         versionCode cdvVersionCode ?: new BigInteger("" + privateHelpers.extractIntFromManifest("versionCode"))
         applicationId cordovaConfig.PACKAGE_NAMESPACE
 
-        minSdkVersion 24
+        minSdkVersion cordovaConfig.MIN_SDK_VERSION
         if (cordovaConfig.MAX_SDK_VERSION != null) {
             maxSdkVersion cordovaConfig.MAX_SDK_VERSION
         }
-        targetSdkVersion 34
-        compileSdkVersion 34
+        targetSdkVersion cordovaConfig.SDK_VERSION
+        compileSdkVersion cordovaConfig.COMPILE_SDK_VERSION
     }
 
     lintOptions {
@@ -252,14 +256,19 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaLanguageVersion.of(cordovaConfig.JAVA_SOURCE_COMPATIBILITY)
+        targetCompatibility JavaLanguageVersion.of(cordovaConfig.JAVA_TARGET_COMPATIBILITY)
     }
 
     if (cordovaConfig.IS_GRADLE_PLUGIN_KOTLIN_ENABLED) {
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+        // If KOTLIN_JVM_TARGET is null, fallback to JAVA_TARGET_COMPATIBILITY,
+        // as they generally should be equal
+        cordovaConfig.KOTLIN_JVM_TARGET = cordovaConfig.KOTLIN_JVM_TARGET ?:
+                cordovaConfig.JAVA_TARGET_COMPATIBILITY
+
+        kotlinOptions {
+            jvmTarget = JavaLanguageVersion.of(cordovaConfig.KOTLIN_JVM_TARGET)
+        }
     }
 
     if (cdvReleaseSigningPropertiesFile) {
@@ -298,11 +307,20 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
-    implementation "androidx.appcompat:appcompat:1.7.0"
-    implementation "androidx.core:core-splashscreen:1.0.1"
+    implementation "androidx.appcompat:appcompat:${cordovaConfig.ANDROIDX_APP_COMPAT_VERSION}"
+    implementation "androidx.core:core-splashscreen:${cordovaConfig.ANDROIDX_CORE_SPLASHSCREEN_VERSION}"
 
     if (cordovaConfig.IS_GRADLE_PLUGIN_KOTLIN_ENABLED) {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.25"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:${cordovaConfig.KOTLIN_VERSION}"
+    }
+
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${cordovaConfig.KOTLIN_VERSION}") {
+            because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${cordovaConfig.KOTLIN_VERSION}") {
+            because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+        }
     }
 
     // SUB-PROJECT DEPENDENCIES START

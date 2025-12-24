@@ -21,15 +21,15 @@ apply plugin: 'com.android.application'
 apply from: '../../../framework/cordova.gradle'
 
 android {
-    compileSdkVersion 34
-    buildToolsVersion "34.0.0"
+    compileSdkVersion cordovaConfig.COMPILE_SDK_VERSION
+    buildToolsVersion cordovaConfig.BUILD_TOOLS_VERSION
 
     namespace 'org.apache.cordova.unittests'
 
     defaultConfig {
         applicationId "org.apache.cordova.unittests"
-        minSdkVersion 24
-        targetSdkVersion 34
+        minSdkVersion cordovaConfig.MIN_SDK_VERSION
+        targetSdkVersion cordovaConfig.SDK_VERSION
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -46,7 +46,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':CordovaLib')
-    implementation "androidx.appcompat:appcompat:1.7.0"
+    implementation "androidx.appcompat:appcompat:${cordovaConfig.ANDROIDX_APP_COMPAT_VERSION}"
 
     testImplementation 'org.json:json:20140107'
     testImplementation 'junit:junit:4.12'
